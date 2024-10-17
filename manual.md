@@ -17,7 +17,7 @@ This manual explains how to set up and use the RPC Prove project, which demonstr
    ```
    make rpc_server
    ```
-   This compiles the C source file into an executable RPC server.
+   This compiles the C source files into an executable RPC server.
 
 2. **Prepare the Python client**
    ```
@@ -29,15 +29,33 @@ This manual explains how to set up and use the RPC Prove project, which demonstr
    ```
    ./core/rpc_server
    ```
-   This starts the RPC server, which will listen for incoming connections.
+   This starts the RPC server, which will listen for incoming connections on port 12345.
 
 4. **Run the Python client**
    ```
    python3 plugins/rpc_client.py
    ```
-   This executes the Python script, which connects to the RPC server and makes an RPC call.
+   This executes the Python script, which connects to the RPC server and allows you to make RPC calls.
 
-5. **Clean up (optional)**
+5. **Making RPC calls**
+   When the Python client is running, you'll be prompted to enter:
+   - The RPC method name (e.g., "echo" or "add")
+   - The parameters for the method (e.g., "Hello, World!" for echo, or "5 3" for add)
+
+   Example session:
+   ```
+   Enter RPC method (or 'quit' to exit): echo
+   Enter parameters: Hello, RPC!
+   Server response: Echo: Hello, RPC!
+
+   Enter RPC method (or 'quit' to exit): add
+   Enter parameters: 5 3
+   Server response: Result: 8
+
+   Enter RPC method (or 'quit' to exit): quit
+   ```
+
+6. **Clean up (optional)**
    ```
    make clean
    ```
@@ -45,14 +63,14 @@ This manual explains how to set up and use the RPC Prove project, which demonstr
 
 ## Explanation
 
-- The C server (`rpc_server.c`):
+- The C server (`rpc_server.c` and `rpc.c`):
   - Listens for incoming connections on port 12345.
-  - Handles RPC calls by appending a prefix to the received message and sending it back.
+  - Registers RPC methods like "echo" and "add".
+  - Handles RPC calls by parsing the method name and parameters, executing the appropriate function, and sending back the result.
 
 - The Python client (`rpc_client.py`):
   - Uses sockets to connect to the RPC server.
   - Provides a `make_rpc_call` function that sends a message to the server and receives the response.
+  - Offers an interactive prompt for the user to make multiple RPC calls.
 
-- When you run the Python script, it makes an RPC call with the message "Hello, RPC!" and prints the response received from the server.
-
-This project demonstrates how to create a simple RPC system where a Python client can make calls to a C server over a network connection.
+This project demonstrates how to create a simple RPC system where a Python client can make calls to a C server over a network connection. The server supports multiple RPC methods, and the client allows for interactive use of these methods.
