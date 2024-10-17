@@ -48,7 +48,7 @@ void add(const char* params, char* response) {
     if (sscanf(params, "%d %d", &a, &b) == 2) {
         snprintf(response, MAX_MESSAGE_LENGTH, "Result: %d", a + b);
     } else {
-        snprintf(response, MAX_MESSAGE_LENGTH, "Error: Invalid parameters for add");
+        snprintf(response, MAX_MESSAGE_LENGTH, "Error: Invalid parameters for add. Please provide two integers separated by a space.");
     }
 }
 

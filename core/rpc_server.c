@@ -12,7 +12,7 @@ void handle_rpc_call(const char* message, int client_socket) {
     char method[50];
     char params[MAX_MESSAGE_LENGTH];
     
-    if (sscanf(message, "%49[^:]:%s", method, params) == 2) {
+    if (sscanf(message, "%49[^:]:%[^\n]", method, params) == 2) {
         rpc_call(method, params);
     } else {
         snprintf(response, MAX_MESSAGE_LENGTH, "Error: Invalid RPC call format");
