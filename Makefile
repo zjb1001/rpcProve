@@ -1,5 +1,6 @@
 CC = gcc
 CFLAGS = -Wall -Wextra -pedantic
+# PYTHON = python
 PYTHON = python3
 
 all: rpc_server python_client
