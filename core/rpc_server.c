@@ -9,7 +9,15 @@
 #define PORT 12345
 
 void handle_rpc_call(const char* message, int client_socket) {
-    rpc_call(message);
+    char method[50];
+    char params[MAX_MESSAGE_LENGTH];
+    
+    if (sscanf(message, "%49[^:]:%s", method, params) == 2) {
+        rpc_call(method, params);
+    } else {
+        snprintf(response, MAX_MESSAGE_LENGTH, "Error: Invalid RPC call format");
+    }
+    
     const char* response = get_response();
     send(client_socket, response, strlen(response), 0);
 }
@@ -20,6 +28,9 @@ int main() {
     int opt = 1;
     int addrlen = sizeof(address);
     char buffer[MAX_MESSAGE_LENGTH] = {0};
+
+    // Initialize RPC methods
+    init_rpc_methods();
 
     // Creating socket file descriptor
     if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0) {

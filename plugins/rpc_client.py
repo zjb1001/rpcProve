@@ -1,6 +1,7 @@
 import socket
 
-def make_rpc_call(message, host='localhost', port=12345):
+def make_rpc_call(method, params, host='localhost', port=12345):
+    message = f"{method}:{params}"
     with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
         s.connect((host, port))
         s.sendall(message.encode('utf-8'))
@@ -9,8 +10,9 @@ def make_rpc_call(message, host='localhost', port=12345):
 
 if __name__ == "__main__":
     while True:
-        message = input("Enter RPC message (or 'quit' to exit): ")
-        if message.lower() == 'quit':
+        method = input("Enter RPC method (or 'quit' to exit): ")
+        if method.lower() == 'quit':
             break
-        result = make_rpc_call(message)
+        params = input("Enter parameters: ")
+        result = make_rpc_call(method, params)
         print("Server response:", result)
