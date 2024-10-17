@@ -8,5 +8,9 @@ def make_rpc_call(message, host='localhost', port=12345):
     return response.decode('utf-8')
 
 if __name__ == "__main__":
-    result = make_rpc_call("Hello, RPC!")
-    print(result)
+    while True:
+        message = input("Enter RPC message (or 'quit' to exit): ")
+        if message.lower() == 'quit':
+            break
+        result = make_rpc_call(message)
+        print("Server response:", result)
