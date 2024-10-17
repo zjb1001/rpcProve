@@ -1,16 +1,16 @@
 CC = gcc
-CFLAGS = -Wall -Wextra -pedantic -shared -fPIC
+CFLAGS = -Wall -Wextra -pedantic
 PYTHON = python3
 
-all: core_lib python_plugin
+all: rpc_server python_client
 
-core_lib:
-	$(CC) $(CFLAGS) -o core/librpc.so core/rpc.c
+rpc_server:
+	$(CC) $(CFLAGS) -o core/rpc_server core/rpc_server.c
 
-python_plugin:
+python_client:
 	$(PYTHON) -m py_compile plugins/rpc_client.py
 
 clean:
-	rm -f core/*.so plugins/*.pyc
+	rm -f core/rpc_server plugins/*.pyc
 
-.PHONY: all core_lib python_plugin clean
+.PHONY: all rpc_server python_client clean

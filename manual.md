@@ -1,37 +1,43 @@
 # RPC Prove Project Manual
 
-This manual explains how to set up and use the RPC Prove project, which demonstrates local RPC calls between a C library and a Python client.
+This manual explains how to set up and use the RPC Prove project, which demonstrates network-based RPC calls between a C server and a Python client.
 
 ## Project Structure
 
-- `core/`: Contains the C implementation of the RPC library
-  - `rpc.c`: C source file for the RPC library
+- `core/`: Contains the C implementation of the RPC server
+  - `rpc_server.c`: C source file for the RPC server
 - `plugins/`: Contains the Python RPC client
-  - `rpc_client.py`: Python script that makes RPC calls to the C library
+  - `rpc_client.py`: Python script that makes RPC calls to the C server
 - `Makefile`: Manages the build process
 - `manual.md`: This file, explaining how to use the project
 
 ## Step-by-Step Guide
 
-1. **Compile the C library**
+1. **Compile the C server**
    ```
-   make core_lib
+   make rpc_server
    ```
-   This compiles the C source file into a shared library (`librpc.so`).
+   This compiles the C source file into an executable RPC server.
 
 2. **Prepare the Python client**
    ```
-   make python_plugin
+   make python_client
    ```
    This command byte-compiles the Python script for slightly faster execution.
 
-3. **Run the Python client**
+3. **Run the RPC server**
+   ```
+   ./core/rpc_server
+   ```
+   This starts the RPC server, which will listen for incoming connections.
+
+4. **Run the Python client**
    ```
    python3 plugins/rpc_client.py
    ```
-   This executes the Python script, which loads the C library and makes an RPC call.
+   This executes the Python script, which connects to the RPC server and makes an RPC call.
 
-4. **Clean up (optional)**
+5. **Clean up (optional)**
    ```
    make clean
    ```
@@ -39,15 +45,14 @@ This manual explains how to set up and use the RPC Prove project, which demonstr
 
 ## Explanation
 
-- The C library (`rpc.c`) defines two functions:
-  - `rpc_call`: Simulates an RPC call by appending a prefix to the input message.
-  - `get_response`: Returns the result of the last RPC call.
+- The C server (`rpc_server.c`):
+  - Listens for incoming connections on port 12345.
+  - Handles RPC calls by appending a prefix to the received message and sending it back.
 
-- The Python client (`rpc_client.py`) uses `ctypes` to load and interact with the C library:
-  - It loads the shared library (`librpc.so`).
-  - It defines the function signatures for the C functions.
-  - It provides a `make_rpc_call` function that wraps the C function calls.
+- The Python client (`rpc_client.py`):
+  - Uses sockets to connect to the RPC server.
+  - Provides a `make_rpc_call` function that sends a message to the server and receives the response.
 
-- When you run the Python script, it makes an RPC call with the message "Hello, RPC!" and prints the response.
+- When you run the Python script, it makes an RPC call with the message "Hello, RPC!" and prints the response received from the server.
 
-This project demonstrates how to create a simple RPC system where Python code can make calls to C functions, simulating a local RPC mechanism.
+This project demonstrates how to create a simple RPC system where a Python client can make calls to a C server over a network connection.
